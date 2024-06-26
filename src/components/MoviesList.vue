@@ -1,55 +1,3 @@
-<script>
-import { getNowPlayingMovies, getUpcomingMovies } from "@/services/api";
-
-export default {
-  data() {
-    return {
-      nowPlayingMovies: [],
-      upcomingMovies: [],
-      selectedMovie: null,
-      customerName: "",
-      customerEmail: "",
-      ticketQuantity: 1,
-      location: "",
-    };
-  },
-  async created() {
-    this.nowPlayingMovies = await getNowPlayingMovies();
-    this.upcomingMovies = await getUpcomingMovies();
-  },
-  methods: {
-    scrollToNowPlaying() {
-      const element = document.getElementById("now-playing");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    },
-    scrollToUpcoming() {
-      const element = document.getElementById("upcoming");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    },
-    togglePurchaseForm(movie) {
-      this.selectedMovie = this.selectedMovie === movie ? null : movie;
-      if (!this.selectedMovie) {
-        this.resetForm();
-      }
-    },
-    resetForm() {
-      this.customerName = "";
-      this.customerEmail = "";
-      this.ticketQuantity = 1;
-      this.location = "";
-    },
-    purchaseTicket() {
-      // Lógica para manejar la compra del ticket
-      console.log("Compra realizada");
-    },
-  },
-};
-</script>
-
 <template>
   <div class="p-4 bg-[#f4f4f5]">
     <!-- Barra de navegación fija -->
@@ -108,69 +56,10 @@ export default {
           v-if="selectedMovie === movie"
           class="bg-white p-4 rounded-lg shadow-md mt-4"
         >
-          <h2 class="text-2xl font-afacad font-semibold mb-4">
-            Compra de Entradas para {{ movie.title }}
-          </h2>
-          <form @submit.prevent="purchaseTicket">
-            <div class="mb-4">
-              <label
-                for="name"
-                class="font-afacad font-semibold block text-gray-700"
-                >Nombre</label
-              >
-              <input
-                type="text"
-                v-model="customerName"
-                id="name"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="email"
-                class="font-afacad font-semibold block text-gray-700"
-                >Correo Electrónico</label
-              >
-              <input
-                type="email"
-                v-model="customerEmail"
-                id="email"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="quantity"
-                class="font-afacad font-semibold block text-gray-700"
-                >Cantidad de Entradas</label
-              >
-              <input
-                type="number"
-                v-model="ticketQuantity"
-                id="quantity"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="location"
-                class="font-afacad font-semibold block text-gray-700"
-                >Ubicación</label
-              >
-              <input
-                type="text"
-                v-model="location"
-                id="location"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <button
-              type="submit"
-              class="px-4 py-2 rounded mr-4 bg-[#13472E] text-white hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
-            >
-              Comprar
-            </button>
-          </form>
+          <TicketForm
+            :movie="selectedMovie"
+            @ticket-purchased="downloadTicketPdf"
+          />
         </div>
       </div>
     </div>
@@ -191,7 +80,6 @@ export default {
             alt="Movie Poster"
             class="w-full h-64 object-cover"
           />
-
           <div class="p-4">
             <h2 class="text-xl font-bold mb-2">{{ movie.title }}</h2>
             <button
@@ -208,74 +96,74 @@ export default {
           v-if="selectedMovie === movie"
           class="bg-gray-100 p-4 rounded-lg shadow-md mt-4"
         >
-          <h2 class="text-2xl font-bold mb-4">
-            Compra de Entradas para {{ movie.title }}
-          </h2>
-          <form @submit.prevent="purchaseTicket">
-            <div class="mb-4">
-              <label
-                for="name"
-                class="font-afacad font-semibold block text-gray-700"
-                >Nombre</label
-              >
-              <input
-                type="text"
-                v-model="customerName"
-                id="name"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="email"
-                class="font-afacad font-semibold block text-gray-700"
-                >Correo Electrónico</label
-              >
-              <input
-                type="email"
-                v-model="customerEmail"
-                id="email"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="quantity"
-                class="font-afacad font-semibold block text-gray-700"
-                >Cantidad de Entradas</label
-              >
-              <input
-                type="number"
-                v-model="ticketQuantity"
-                id="quantity"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="location"
-                class="font-afacad font-semibold block text-gray-700"
-                >Ubicación</label
-              >
-              <input
-                type="text"
-                v-model="location"
-                id="location"
-                class="w-full p-2 border border-gray-300 rounded mt-1"
-              />
-            </div>
-            <button
-              type="submit"
-              class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
-            >
-              Comprar
-            </button>
-          </form>
+          <TicketForm
+            :movie="selectedMovie"
+            @ticket-purchased="downloadTicketPdf"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import { getNowPlayingMovies, getUpcomingMovies } from "@/services/api";
+import TicketForm from "@/components/TicketForm.vue";
+import { jsPDF } from "jspdf";
+
+export default {
+  components: {
+    TicketForm,
+  },
+  data() {
+    return {
+      nowPlayingMovies: [],
+      upcomingMovies: [],
+      selectedMovie: null,
+    };
+  },
+  async created() {
+    this.nowPlayingMovies = await getNowPlayingMovies();
+    this.upcomingMovies = await getUpcomingMovies();
+  },
+  methods: {
+    scrollToNowPlaying() {
+      const element = document.getElementById("now-playing");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    scrollToUpcoming() {
+      const element = document.getElementById("upcoming");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    togglePurchaseForm(movie) {
+      this.selectedMovie = this.selectedMovie === movie ? null : movie;
+      if (!this.selectedMovie) {
+        this.resetForm();
+      }
+    },
+    resetForm() {
+      this.customerName = "";
+      this.customerEmail = "";
+      this.ticketQuantity = 1;
+      this.location = "";
+    },
+    downloadTicketPdf(ticketInfo) {
+      const doc = new jsPDF();
+      doc.text("Ticket de Compra", 10, 10);
+      doc.text(`Nombre: ${ticketInfo.name}`, 10, 20);
+      doc.text(`Correo Electrónico: ${ticketInfo.email}`, 10, 30);
+      doc.text(`Película: ${ticketInfo.movie}`, 10, 40);
+      doc.text(`Cantidad de Entradas: ${ticketInfo.quantity}`, 10, 50);
+      doc.text(`Ubicación: ${ticketInfo.location}`, 10, 60);
+      doc.save("ticket.pdf");
+    },
+  },
+};
+</script>
 
 <style scoped>
 /* TailwindCSS debería manejar la mayoría de los estilos */

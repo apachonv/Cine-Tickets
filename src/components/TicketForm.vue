@@ -50,8 +50,6 @@
 </template>
 
 <script>
-import jsPDF from "jspdf";
-
 export default {
   props: ["movie"],
   data() {
@@ -66,28 +64,14 @@ export default {
   },
   methods: {
     buyTicket() {
-      // Lógica para procesar la compra y generar la factura en PDF
-      const sale = {
-        ...this.customer,
-        tickets: this.tickets,
+      const ticketInfo = {
+        name: this.customer.name,
+        email: this.customer.email,
+        quantity: this.tickets,
         location: this.location,
-        movie: this.movie,
-        date: new Date(),
+        movie: this.movie.title,
       };
-      this.generatePDF(sale);
-    },
-    generatePDF(sale) {
-      // Aquí utilizarías una librería como jsPDF para generar la factura en PDF
-      // Ejemplo básico:
-      const doc = new jsPDF();
-      doc.text(`Factura de Venta`, 10, 10);
-      doc.text(`Nombre: ${sale.name}`, 10, 20);
-      doc.text(`Correo Electrónico: ${sale.email}`, 10, 30);
-      doc.text(`Película: ${sale.movie.title}`, 10, 40);
-      doc.text(`Cantidad de Entradas: ${sale.tickets}`, 10, 50);
-      doc.text(`Ubicación: ${sale.location}`, 10, 60);
-      doc.text(`Fecha y Hora de la Venta: ${sale.date}`, 10, 70);
-      doc.save("factura.pdf");
+      this.$emit("ticket-purchased", ticketInfo);
     },
   },
 };
