@@ -1,24 +1,3 @@
-# cine-tickets
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Este proyecto es un sistema visual para la gestión de venta de tickets en un cine.
+Las películas/series/programas se consumen desde una API externa.
+De cada venta se debe registrar la cantidad de entradas, la ubicación, nombre y correo electrónico del cliente y se debe generar una factura en PDF con la fecha y hora de la venta, fecha y hora de la película y el monto pagado.
