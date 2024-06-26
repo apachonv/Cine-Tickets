@@ -67,7 +67,7 @@
     <h1 class="p-6"></h1>
     <h1
       id="upcoming"
-      class="text-3xl font-afacad font-semibold mb-6 text-center tra6cking-wide text-[#13472E] top-6"
+      class="text-3xl font-afacad font-semibold mb-6 text-center tra6cking-wide text-[#13472E]"
     >
       Películas Próximamente
     </h1>
@@ -84,7 +84,7 @@
             <h2 class="text-xl font-bold mb-2">{{ movie.title }}</h2>
             <button
               @click="togglePurchaseForm(movie)"
-              class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+              class="mt-4 bg-[#13472E] text-white px-4 py-2 rounded hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
             >
               Comprar Ticket
             </button>
