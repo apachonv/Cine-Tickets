@@ -1,21 +1,21 @@
 <template>
   <div class="p-4 bg-[#f4f4f5]">
     <nav
-      class="top-0 z-50 bg-white shadow-lg flex items-center justify-between p-4 mb-6"
+      class="top-0 z-50 bg-white shadow-lg flex flex-wrap items-center justify-between p-4 mb-6"
     >
-      <div class="flex items-center">
+      <div class="flex items-center flex-shrink-0">
         <img src="@/assets/logo.png" alt="Logo" class="h-8 mr-2" />
       </div>
-      <div class="flex">
+      <div class="flex flex-wrap items-center">
         <button
           @click="scrollToNowPlaying"
-          class="px-4 py-2 rounded mr-4 bg-[#13472E] text-white hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
+          class="px-4 py-2 rounded mr-4 mb-2 bg-[#13472E] text-white hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
         >
           Cartelera
         </button>
         <button
           @click="scrollToUpcoming"
-          class="px-4 py-2 rounded mr-4 bg-[#13472E] text-white hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
+          class="px-4 py-2 rounded mr-4 mb-2 bg-[#13472E] text-white hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
         >
           Próximamente
         </button>
@@ -141,7 +141,7 @@ export default {
     resetForm() {
       this.customerName = "";
       this.customerEmail = "";
-      this.ticketQuantity = 1;
+      this.ticketQuantity = 0;
       this.location = "";
     },
     downloadTicketPdf(ticketInfo) {
@@ -150,9 +150,10 @@ export default {
       doc.text(`Nombre: ${ticketInfo.name}`, 10, 20);
       doc.text(`Correo Electrónico: ${ticketInfo.email}`, 10, 30);
       doc.text(`Película: ${ticketInfo.movie}`, 10, 40);
-      doc.text(`Cantidad de Entradas: ${ticketInfo.quantity}`, 10, 50);
+      doc.text(`Cantidad de Entradas: ${ticketInfo.tickets}`, 10, 50);
       doc.text(`Ubicación: ${ticketInfo.location}`, 10, 60);
-      doc.text(`Total: ${ticketInfo.total}`, 10, 70);
+      doc.text(`Fecha: ${ticketInfo.date}`, 10, 70);
+      doc.text(`Total: ${ticketInfo.total}`, 10, 80);
       doc.save("ticket.pdf");
     },
   },

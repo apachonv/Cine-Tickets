@@ -15,22 +15,21 @@
         <h2 class="font-afacad font-bold text-lg mb-2">
           {{ movie.title }}
         </h2>
-        <p class="font-afacad font-semibold text-sm -700 mb-4">
+        <p class="font-afacad font-semibold text-sm text-gray-700 mb-4">
           {{ movie.overview }}
         </p>
-        <p class="font-afacad font-semibold text-sm -700 mb-4">
+        <p class="font-afacad font-semibold text-sm text-gray-700 mb-4">
           {{ categories }}
         </p>
-        <p class="font-afacad font-semibold text-sm -700 mb-4">
+        <p class="font-afacad font-semibold text-sm text-gray-700 mb-4">
           Fecha de estreno {{ releaseDate }}
         </p>
-        <p class="font-afacad font-semibold text-sm -700 mb-4">
+        <p class="font-afacad font-semibold text-sm text-gray-700 mb-4">
           {{ duration }} min
         </p>
-        <p class="font-afacad font-semibold text-sm -700 mb-4">
+        <p class="font-afacad font-semibold text-sm text-gray-700 mb-4">
           Precio $10.000
         </p>
-        <p class="p-4"></p>
       </div>
 
       <div class="flex-1">
@@ -100,18 +99,31 @@
             />
           </div>
 
-          <div class="mb-4">
+          <div class="flex items-center mb-8">
             <button
               type="submit"
-              class="mt-4 bg-[#13472E] text-white px-4 py-2 rounded hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
+              class="bg-[#13472E] text-white px-4 py-2 rounded hover:bg-emerald-950 transition duration-200 font-afacad font-semibold"
             >
               Comprar
             </button>
-          </div>
-          <div>
-            <p class="text-gray-700 text-sm font-bold">Total: ${{ total }}</p>
+            <p class="ml-4 text-gray-700 text-sm font-bold">
+              Total: ${{ total }}
+            </p>
           </div>
         </form>
+
+        <div v-if="trailer" class="mt-20">
+          <h3 class="font-afacad font-semibold text-sm text-gray-700 mb-2">
+            Trailer
+          </h3>
+          <iframe
+            :src="`https://www.youtube.com/embed/${trailer.key}`"
+            frameborder="0"
+            allowfullscreen
+            class="w-full rounded-lg"
+            style="max-height: 300px"
+          ></iframe>
+        </div>
       </div>
     </div>
   </div>
@@ -119,6 +131,7 @@
 
 <script>
 import { getMovieDetails, getMovieVideos } from "@/services/api";
+import jsPDF from "jspdf";
 
 export default {
   props: {
@@ -130,13 +143,14 @@ export default {
         name: "",
         email: "",
       },
-      tickets: 1,
+      tickets: 0,
       location: "",
       categories: "",
       releaseDate: "",
       duration: "",
       trailer: null,
-      total: 10000,
+      total: 0,
+      date: new Date().toLocaleDateString(),
     };
   },
   methods: {
@@ -168,13 +182,26 @@ export default {
       const ticketInfo = {
         name: this.customer.name,
         email: this.customer.email,
+        movie: this.movie.title,
         tickets: this.tickets,
         location: this.location,
-        movie: this.movie.title,
         total: this.total,
+        date: this.date,
       };
       this.$emit("ticket-purchased", ticketInfo);
+      this.generatePDF(ticketInfo);
       this.$emit("close");
+    },
+    generatePDF(ticketInfo) {
+      const doc = new jsPDF();
+      doc.text(`Ticket de compra para: ${ticketInfo.movie}`, 10, 10);
+      doc.text(`Nombre: ${ticketInfo.name}`, 10, 20);
+      doc.text(`Correo Electrónico: ${ticketInfo.email}`, 10, 30);
+      doc.text(`Cantidad de Entradas: ${ticketInfo.tickets}`, 10, 40);
+      doc.text(`Ubicación: ${ticketInfo.location}`, 10, 50);
+      doc.text(`Total: ${ticketInfo.total}`, 10, 60);
+      doc.text(`Fecha: ${ticketInfo.date}`, 10, 70);
+      doc.save(`ticket_${ticketInfo.movie}.pdf`);
     },
   },
   created() {
