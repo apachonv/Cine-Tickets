@@ -7,7 +7,6 @@
 
 <script>
 import MoviesList from "./components/MoviesList.vue";
-import TicketForm from "./components/TicketForm.vue";
 
 export default {
   data() {
@@ -17,7 +16,6 @@ export default {
   },
   components: {
     MoviesList,
-    TicketForm,
   },
   methods: {
     handleSelectMovie(movie) {
@@ -26,7 +24,3 @@ export default {
   },
 };
 </script>
-
-<style>
-/* TailwindCSS should handle most of the styling */
-</style>

@@ -34,3 +34,33 @@ export const getUpcomingMovies = async () => {
     return [];
   }
 };
+
+export const getMovieDetails = async (movieId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/movie/${movieId}`, {
+      params: {
+        api_key: API_KEY,
+        language: "es-ES",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+    return null;
+  }
+};
+
+export const getMovieVideos = async (movieId) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/movie/${movieId}/videos`, {
+      params: {
+        api_key: API_KEY,
+        language: "es-ES",
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching movie videos:", error);
+    return [];
+  }
+};

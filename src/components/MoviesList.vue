@@ -1,8 +1,7 @@
 <template>
   <div class="p-4 bg-[#f4f4f5]">
-    <!-- Barra de navegación fija -->
     <nav
-      class="sticky top-0 z-50 bg-white shadow-lg flex items-center justify-between p-4 mb-6"
+      class="top-0 z-50 bg-white shadow-lg flex items-center justify-between p-4 mb-6"
     >
       <div class="flex items-center">
         <img src="@/assets/logo.png" alt="Logo" class="h-8 mr-2" />
@@ -31,7 +30,6 @@
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="movie in nowPlayingMovies" :key="movie.id">
-        <!-- Tarjeta de la película -->
         <div class="bg-white shadow-lg rounded-lg overflow-hidden">
           <img
             :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
@@ -51,16 +49,14 @@
           </div>
         </div>
 
-        <!-- Formulario de compra -->
-        <div
-          v-if="selectedMovie === movie"
-          class="bg-white p-4 rounded-lg shadow-md mt-4"
-        >
-          <TicketForm
+        <portal-target name="ticket-modal">
+          <Modal
+            v-if="selectedMovie === movie"
             :movie="selectedMovie"
             @ticket-purchased="downloadTicketPdf"
+            @close="togglePurchaseForm(null)"
           />
-        </div>
+        </portal-target>
       </div>
     </div>
 
@@ -73,7 +69,6 @@
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="movie in upcomingMovies" :key="movie.id">
-        <!-- Tarjeta de la película -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
           <img
             :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
@@ -91,16 +86,14 @@
           </div>
         </div>
 
-        <!-- Formulario de compra -->
-        <div
-          v-if="selectedMovie === movie"
-          class="bg-gray-100 p-4 rounded-lg shadow-md mt-4"
-        >
-          <TicketForm
+        <portal-target name="ticket-modal">
+          <Modal
+            v-if="selectedMovie === movie"
             :movie="selectedMovie"
             @ticket-purchased="downloadTicketPdf"
+            @close="togglePurchaseForm(null)"
           />
-        </div>
+        </portal-target>
       </div>
     </div>
   </div>
@@ -108,12 +101,12 @@
 
 <script>
 import { getNowPlayingMovies, getUpcomingMovies } from "@/services/api";
-import TicketForm from "@/components/TicketForm.vue";
+import Modal from "@/components/ComponentModal.vue";
 import { jsPDF } from "jspdf";
 
 export default {
   components: {
-    TicketForm,
+    Modal,
   },
   data() {
     return {
@@ -159,12 +152,9 @@ export default {
       doc.text(`Película: ${ticketInfo.movie}`, 10, 40);
       doc.text(`Cantidad de Entradas: ${ticketInfo.quantity}`, 10, 50);
       doc.text(`Ubicación: ${ticketInfo.location}`, 10, 60);
+      doc.text(`Total: ${ticketInfo.total}`, 10, 70);
       doc.save("ticket.pdf");
     },
   },
 };
 </script>
-
-<style scoped>
-/* TailwindCSS debería manejar la mayoría de los estilos */
-</style>
